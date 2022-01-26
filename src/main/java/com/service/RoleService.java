@@ -16,6 +16,6 @@ public interface RoleService {
 
     public Role getRole(long id);
 
-    public Role getRole(String name);
+    public Role getRole(Object name);
 
 }

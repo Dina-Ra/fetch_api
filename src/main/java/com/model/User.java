@@ -1,11 +1,15 @@
 package com.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name="users")
-public class User implements UserDetails {
+public class User implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -28,9 +32,15 @@ public class User implements UserDetails {
     private String username;
     @Column(name = "password")
     private String password;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id"
+    )
+
     private Set<Role> roles;
 
     public User() {

@@ -1,10 +1,4 @@
 
-let roleList = [
-    {id: 1, role: "ROLE_USER"},
-    {id: 2, role: "ROLE_ADMIN"}
-]
-
-let isUser = true;
 
 const userFetch = {
     head: {
@@ -14,10 +8,10 @@ const userFetch = {
     },
     getAllUsers: async () => await fetch('api/users'),
     getUserByUsername: async () => await fetch(`api/users/name`),
-    getUserById: async (id) => await fetch(`api/users/${id}`),
-    addUser: (user) => fetch('api/users', {method: "POST", headers: userFetch.head, body: JSON.stringify(user)}),
-    updateUser: async (user, id) => await fetch(`api/users/${id}`, {method: 'PUT', headers: userFetch.head, body: JSON.stringify(user)}),
-    deleteUser: async (id) => await fetch(`api/users/${id}`, {method: 'DELETE', headers: userFetch.head})
+    getUserById: async (id) => await fetch(`api/users/` + id),
+    addUser: async (user) => await fetch('api/users', {method: "POST", headers: userFetch.head, body: JSON.stringify(user)}),
+    updateUserByID: async (user, id) => await fetch(`api/users/` + id, {method: 'PUT', headers: userFetch.head, body: JSON.stringify(user)}),
+    deleteUserByID: async (id) => await fetch(`api/users/` + id, {method: 'DELETE', headers: userFetch.head})
 }
 
 allFunctions()
@@ -31,18 +25,28 @@ function infoUser() {
     userFetch.getUserByUsername()
         .then(res => res.json())
         .then(user => {
-            console.log(user);
             let stringRoles = getRoles(user.roles);
             document.querySelector('#infoUser').innerHTML = `
                 ${user.username} with roles:  ${stringRoles}
-            `
+            `;
+            document.querySelector('#userInfoPanel').innerHTML = `
+            <tr>
+                <td>${user.id}</td>
+                <td>${user.name}</td>
+                <td>${user.age}</td>
+                <td>${user.surname}</td>
+                <td>${user.username}</td>
+                <td>${stringRoles}</td>
+                <td>
+            `;
         });
 }
 
+let count = 1;
 function getUsers() {
     userFetch.getAllUsers()
         .then(res => res.json())
-        .then(users => {users.forEach((user) => {
+        .then(users => {users.forEach((user) => {count ++;
             let stringRoles = getRoles(user.roles);
             document.querySelector('#tableUsers').insertAdjacentHTML('beforeend',
                 `<tr>
@@ -53,12 +57,12 @@ function getUsers() {
                 <td>${user.username}</td>
                 <td>${stringRoles}</td>
                 <td>
-                <button type="button" onclick="editUser(${user.id})"
-                class="btn btn-info edit-btn" data-toggle="modal" data-target="#edit" id="editUser">Edit</button>
+                <button type="submit" onclick="editUser(${user.id})"
+                class="btn btn-info" data-toggle="modal" data-target="#editUser">Edit</button>
                 </td>
                 <td>
-                <button type="button" onclick="deleteUserById(${user.id})" 
-                class="btn btn-danger" data-toggle="modal" data-target="#delete">Delete</button>
+                <button type="submit" onclick="deleteUser(${user.id})" 
+                class="btn btn-danger" data-toggle="modal" data-target="#deleteUser">Delete</button>
                 </td>
                 </tr>`);
         })
@@ -67,175 +71,124 @@ function getUsers() {
 
 function addUserData() {
     document.addEventListener('DOMContentLoaded', addUserData);
-        console.log("add3");
         let name = document.getElementById('addName').value;
-        console.log(name);
         let age = document.getElementById('addAge').value;
         let surname = document.getElementById('addSurname').value;
         let username = document.getElementById('addUsername').value;
         let password = document.getElementById('addPassword').value;
-        let roles = document.getElementById('addRoles').value;
+        let role = document.getElementById('addRoles').value;
         let user = {
             name:name,
             age:age,
             surname:surname,
             username:username,
             password:password,
-            roles:roles
+            roles: addRoles(role)
         };
-        userFetch.addUser(user);
-        // let stringRoles = getRoles(user.roles);
-        document.querySelector('#tableUsers').insertAdjacentHTML('beforeend',
-            `<tr>
-                <td>${user.id}</td>
-                <td>${user.name}</td>
-                <td>${user.age}</td>
-                <td>${user.surname}</td>
-                <td>${user.username}</td>
-                <td>${roles}</td>
-                <td>
-                <button type="button" onclick="editUser(${user.id})"
-                class="btn btn-info edit-btn" data-toggle="modal" data-target="#edit" id="editUser">Edit</button>
-                </td>
-                <td>
-                <button type="button" onclick="deleteUserById(${user.id})" 
-                class="btn btn-danger" data-toggle="modal" data-target="#delete">Delete</button>
-                </td>
-                </tr>`);
-    }
-
-    // function addUserData() {
-    //     let name = document.getElementById('addName');
-    //     let age = document.getElementById('addAge');
-    //     let surname = document.getElementById('addSurname');
-    //     let username = document.getElementById('addUsername');
-    //     let password = document.getElementById('addPassword');
-    //     let roles = addRoles(document.getElementById('addRoles'));
-    //     let user = {
-    //         name:name,
-    //         age:age,
-    //         surname:surname,
-    //         username:username,
-    //         password:password,
-    //         roles:roles
-    //     };
-    //     console.log(user)
-    //     userFetch.addUser(user);
-    //     let stringRoles = getRoles(user.roles);
-    //     document.querySelector('#tableUsers').insertAdjacentHTML('beforeend',
-    //         `<tr>
-    //             <td>${user.id}</td>
-    //             <td>${user.name}</td>
-    //             <td>${user.age}</td>
-    //             <td>${user.surname}</td>
-    //             <td>${user.username}</td>
-    //             <td>${stringRoles}</td>
-    //             <td>
-    //             <button type="button" onclick="editUser(${user.id})"
-    //             class="btn btn-info edit-btn" data-toggle="modal" data-target="#edit" id="editUser">Edit</button>
-    //             </td>
-    //             <td>
-    //             <button type="button" onclick="deleteUserById(${user.id})"
-    //             class="btn btn-danger" data-toggle="modal" data-target="#delete">Delete</button>
-    //             </td>
-    //             </tr>`);
-    // }
-
+    userFetch.addUser(user).then(() => {
+        document.getElementById('addName').value = ``;
+        document.getElementById('addAge').value = ``;
+        document.getElementById('addSurname').value = ``;
+        document.getElementById('addUsername').value = ``;
+        document.getElementById('addPassword').value = ``;
+        document.getElementById('addRoles').value = ``;
+        document.getElementById('tableUsers').innerHTML = ``;
+        getUsers();
+    })
+}
 
 function editUser(id) {
-    fetch("/api/users/" + id, {method: 'GET', dataType: 'json',})
+    userFetch.getUserById(id)
         .then(res => {
             res.json().then(user => {
-                $('#name').val(user.name)
-                $('#age').val(user.age)
-                $('#surname').val(user.surname)
-                $('#username').val(user.username)
-                $('#password').val(user.password)
-                $('#roles').val(user.roles)
+                $('#editID').val(user.id)
+                $('#editName').val(user.name)
+                $('#editAge').val(user.age)
+                $('#editSurname').val(user.surname)
+                $('#editUsername').val(user.username)
+                $('#editPassword').val("")
+                $('#editRoles').val(getRoles(user.roles))
             })
         })
 }
 
 function updateUser() {
-    let name =  document.getElementById('name').value;
-    let age = document.getElementById('age').value;
-    let surname = document.getElementById('surname').value;
-    let username = document.getElementById('username').value;
-    let password = document.getElementById('password').value;
-    let roles = getRoles(Array.from(document.getElementById('roles').selectedOptions)
-        .map(role => role.value));
-    fetch("/api/users/" + id, {
-        method: "PATCH",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8'
-        },
-        body: JSON.stringify({
-            name: name,
-            age: age,
-            surname: surname,
-            username: username,
-            password: password,
-            roles: roles
-        })
+    let id = document.getElementById('editID').value;
+    let name =  document.getElementById('editName').value;
+    let age = document.getElementById('editAge').value;
+    let surname = document.getElementById('editSurname').value;
+    let username = document.getElementById('editUsername').value;
+    let password = document.getElementById('editPassword').value;
+    let role = addRoles(document.getElementById('editRoles').value);
+    let user = {
+        name:name,
+        age:age,
+        surname:surname,
+        username:username,
+        password:password,
+        roles: addRoles(role)
+    };
+    userFetch.updateUserByID(user, id).then(() => {
+        document.getElementById('editID').value = ``;
+        document.getElementById('editName').value = ``;
+        document.getElementById('editAge').value = ``;
+        document.getElementById('editSurname').value = ``;
+        document.getElementById('editUsername').value = ``;
+        document.getElementById('editPassword').value = ``;
+        document.getElementById('editRoles').value = ``;
+        document.getElementById('tableUsers').innerHTML = ``;
+        getUsers();
     })
-        .then(() => {
-            userInfo.empty();
-            getUsers();
-            closeForm();
-        })
 }
 
-function deleteUserById(id) {
-    fetch("/api/users/" + id, {method: 'GET', dataType: 'json',})
+function deleteUser(id) {
+    userFetch.getUserById(id)
         .then(res => {
             res.json().then(user => {
-                $('#name').val(user.name)
-                $('#age').val(user.age)
-                $('#surname').val(user.surname)
-                $('#username').val(user.username)
-                $('#password').val(user.password)
-                $('#roles').val(user.roles)
+                $('#deleteID').val(user.id)
+                $('#deleteName').val(user.name)
+                $('#deleteAge').val(user.age)
+                $('#deleteSurname').val(user.surname)
+                $('#deleteUsername').val(user.username)
+                $('#deleteRoles').val(getRoles(user.roles))
             })
         })
 }
 
-function deleteUser() {
-    fetch("/api/users/" + ($('#deleteId').val()), {method: "DELETE"})
-        .then(() => {
-            userInfo.empty();
-            getUsers();
-            closeForm();
-        })
+function deleteUserById() {
+    let id = document.getElementById('deleteID').value;
+    userFetch.deleteUserByID(id).then(() => {
+        document.getElementById('deleteID').value = ``;
+        document.getElementById('deleteName').value = ``;
+        document.getElementById('deleteAge').value = ``;
+        document.getElementById('deleteSurname').value = ``;
+        document.getElementById('deleteUsername').value = ``;
+        document.getElementById('deleteRoles').value = ``;
+        document.getElementById('tableUsers').innerHTML = ``;
+        getUsers();
+    });
 }
 
-function closeForm() {
-    $("#edit .close").click();
-    document.getElementById("editUserForm").reset();
-    $("#delete .close").click();
-    document.getElementById("deleteUserForm").reset();
-    $('#deleteRole > option').remove();
-}
 
 function getRoles(list) {
     let userRoles = [];
-    list.forEach((role) => {
-        if (String(role.name).indexOf("USER") >= 0) {
-            userRoles.push(" USER");
-        }
-        if (String(role.name).indexOf("ADMIN") >= 0) {
+    for (let role of list) {
+        if (role.name == "ROLE_ADMIN") {
             userRoles.push(" ADMIN");
         }
-    })
+    }
+    userRoles.push(" USER");
     let stringRoles = userRoles.join("  ");
     return stringRoles;
 }
 
 function addRoles(role) {
     let roles = [];
-    if (String(role).indexOf("ADMIN") >= 0) {
-        roles.push("ROLE_ADMIN");
+    if (role === "ROLE_ADMIN"){
+        console.log("admin")
+        roles.push({id: 1, role: "ROLE_ADMIN"});
     }
-    roles.push("ROLE_USER");
+    roles.push({id: 2, role: "ROLE_USER"});
+    console.log(roles);
     return roles;
 }

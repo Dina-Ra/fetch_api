@@ -1,15 +1,19 @@
 package com.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 // Этот класс реализует интерфейс GrantedAuthority, в котором необходимо переопределить только один метод getAuthority() (возвращает имя роли).
 // Имя роли должно соответствовать шаблону: «ROLE_ИМЯ», например, ROLE_USER.
 @Entity
 @Table(name="roles")
-public class Role implements GrantedAuthority {
+public class Role implements GrantedAuthority, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -49,7 +53,6 @@ public class Role implements GrantedAuthority {
         return name;
     }
 
-
     @Override
     public String getAuthority() {
         return name;
@@ -71,7 +74,8 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return name.replaceFirst("ROLE_", "");
+        return name;
+//        .replaceFirst("ROLE_", "");
     }
 
 }

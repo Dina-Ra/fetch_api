@@ -44,36 +44,13 @@ public class AdminRestController {
 
     @PostMapping("/users")
     public void addUser(@RequestBody User user) {
-        System.out.println("g");
-        userService.addUser(user);
+        User newUser = user;
+        userService.addUser(newUser);
     }
 
-//    @PostMapping("/users")
-//    public User addUser(@RequestBody User user, @PathVariable String[] listRoles) {
-//        Set<Role> userRoles = new HashSet<>();
-//        for (String role: listRoles) {
-//            userRoles.add(roleService.getRole("ROLE_" + role));
-//            if (role.equals("ADMIN")) {
-//                userRoles.add(roleService.getRole("ROLE_USER"));
-//            }
-//        }
-//        user.setRoles(userRoles);
-//        userService.addUser(user);
-//        return user;
-//    }
-
-    @PatchMapping("/users/{id}")
-    public User updateUser(@RequestBody User user, @PathVariable String[] listRoles) {
-        Set<Role> userRoles = new HashSet<>();
-        for (String role: listRoles) {
-            userRoles.add(roleService.getRole("ROLE_" + role));
-            if (role.equals("ADMIN")) {
-                userRoles.add(roleService.getRole("ROLE_USER"));
-            }
-        }
-        user.setRoles(userRoles);
-        userService.updateUser(user);
-        return user;
+    @PutMapping("/users/{id}")
+    public void updateUser(@RequestBody User user, @PathVariable("id") long id) {
+        userService.updateUser(user, id);
     }
 
     @DeleteMapping("/users/{id}")

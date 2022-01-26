@@ -55,7 +55,7 @@
                     </ul>
 
                     <div class="tab-content">
-                        <div class="tab-pane active" th:id="userstable" role="tabpanel"
+                        <div class="tab-pane active" id="userstable" role="tabpanel"
                              aria-labelledby="userstable-tab">
                             <div class="card" style="border-color: rgb(211, 209, 209);">
                                 <div class="card-header">
@@ -90,28 +90,24 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form th:id="editUserForm">
+                                                    <form id="editUserForm">
                                                         <div class="form-group" style="text-align: center;">
+                                                            <label><h5>ID</h5></label>
+                                                            <input class="form-control" id="editID" readonly="readonly">
                                                             <label><h5>Name</h5></label>
-                                                            <input th:type="text" th:class="form-control" th:id="name"
-                                                                   th:name="name">
+                                                            <input class="form-control" id="editName">
                                                             <label><h5>Age</h5></label>
-                                                            <input th:type="text" th:class="form-control" th:id="age"
-                                                                   th:name="age">
+                                                            <input class="form-control" id="editAge">
                                                             <label><h5>Surname</h5></label>
-                                                            <input th:type="text" th:class="form-control"
-                                                                   th:id="surname" th:name="surname">
+                                                            <input class="form-control" id="editSurname">
                                                             <label><h5>Email</h5></label>
-                                                            <input th:type="text" th:class="form-control"
-                                                                   th:id="username" th:name="username">
+                                                            <input class="form-control" id="editUsername">
                                                             <label><h5>Password</h5></label>
-                                                            <input th:type="text" th:class="form-control"
-                                                                   th:id="password" th:name="password">
+                                                            <input class="form-control" id="editPassword">
                                                         </div>
                                                         <div class="form-group" style="text-align: center;">
                                                             <label><h5>Roles</h5></label>
-                                                            <select th:class="form-control" th:id="roles"
-                                                                    th:name="roles">
+                                                            <select class="form-control" id="editRoles">
                                                                 <option>ADMIN</option>
                                                                 <option>USER</option>
                                                             </select>
@@ -142,23 +138,20 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form th:id="deleteUserForm">
+                                                    <form id="deleteUserForm">
                                                         <div class="form-group" style="text-align: center;">
+                                                            <label><h5>ID</h5></label>
+                                                            <input class="form-control" id="deleteID" name="id" readonly="readonly">
                                                             <label><h5>Name</h5></label>
-                                                            <input th:type="text" th:class="form-control" th:id="name"
-                                                                   th:name="name">
+                                                            <input class="form-control" id="deleteName" name="name">
                                                             <label><h5>Age</h5></label>
-                                                            <input th:type="text" th:class="form-control" th:id="age"
-                                                                   th:name="age">
+                                                            <input class="form-control" id="deleteAge" name="age">
                                                             <label><h5>Surname</h5></label>
-                                                            <input th:type="text" th:class="form-control"
-                                                                   th:id="surname" th:name="surname">
+                                                            <input class="form-control" id="deleteSurname" name="surname">
                                                             <label><h5>Email</h5></label>
-                                                            <input th:type="text" th:class="form-control"
-                                                                   th:id="username" th:name="username">
+                                                            <input class="form-control" id="deleteUsername" name="username">
                                                             <label><h5>Roles</h5></label>
-                                                            <input th:type="text" th:class="form-control" th:id="roles"
-                                                                   th:name="roles">
+                                                            <input class="form-control" id="deleteRoles" name="roles">
 
                                                         </div>
                                                     </form>
@@ -167,7 +160,7 @@
                                                     <button type="button" class="btn btn-secondary"
                                                             data-dismiss="modal">Close
                                                     </button>
-                                                    <button type="submit" class="btn btn-danger" onclick="deleteUser()">
+                                                    <button type="submit" class="btn btn-danger" onclick="deleteUserById()">
                                                         Delete
                                                     </button>
                                                 </div>
@@ -242,15 +235,7 @@
                                                     <th scope="col">Role</th>
                                                 </tr>
                                                 </thead>
-                                                <tbody>
-                                                <!--                                        <tr>-->
-                                                <!--                                            <td th:text="${user.getId()}"></td>-->
-                                                <!--                                            <td th:text="${user.getName()}"></td>-->
-                                                <!--                                            <td th:text="${user.getAge()}"></td>-->
-                                                <!--                                            <td th:text="${user.getSurname()}"></td>-->
-                                                <!--                                            <td th:text="${user.getUsername()}"></td>-->
-                                                <!--                                            <td th:text="${user.getRolesToString(user.getRoles())}"></td>-->
-                                                <!--                                        </tr>-->
+                                                <tbody id="userInfoPanel">
                                                 </tbody>
                                             </table>
                                         </form>
@@ -267,16 +252,16 @@
         </div>
     </div>
 
-    <!--<script>-->
-    <!--    $(function () {-->
-    <!--        $('#admintab li:last-child a').tab('show')-->
-    <!--    })-->
-    <!--</script>-->
-    <!--<script>-->
-    <!--    $(function () {-->
-    <!--        $('#myList a:last-child').tab('show')-->
-    <!--    })-->
-    <!--</script>-->
+<!--    <script>-->
+<!--        $(function () {-->
+<!--            $('#admintab li:last-child a').tab('show')-->
+<!--        })-->
+<!--    </script>-->
+<!--    <script>-->
+<!--        $(function () {-->
+<!--            $('#myList a:last-child').tab('show')-->
+<!--        })-->
+<!--    </script>-->
 
 
     <!-- Вариант 1: пакет jQuery и Bootstrap (включает Popper) -->

@@ -13,7 +13,7 @@ public interface UserService {
 
     public List<User> getAllUsers();
 
-    public void updateUser(User user);
+    public void updateUser(User user, long id);
 
     public User getUser(long id);
     public User getUser(String name);
