@@ -54,7 +54,7 @@
                         </li>
                     </ul>
 
-                    <div class="tab-content">
+                    <div sec:authorize="hasRole('ROLE_ADMIN')" class="tab-content">
                         <div class="tab-pane active" id="userstable" role="tabpanel"
                              aria-labelledby="userstable-tab">
                             <div class="card" style="border-color: rgb(211, 209, 209);">
