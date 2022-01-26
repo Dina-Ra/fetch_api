@@ -1,7 +1,9 @@
 package com.service;
 
 
+import com.dao.RoleRepository;
 import com.dao.UserRepository;
+import com.model.Role;
 import com.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -62,7 +65,6 @@ public class UserServiceImpl implements UserService{
         if (optionalUser.isPresent()) {
             user = optionalUser.get();
         }
-        System.out.println(user);
         return user;
     }
 
@@ -73,6 +75,7 @@ public class UserServiceImpl implements UserService{
         if (optionalUser.isPresent()) {
             user = optionalUser.get();
         }
+
         return user;
     }
 

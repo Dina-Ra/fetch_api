@@ -42,11 +42,10 @@ function infoUser() {
         });
 }
 
-let count = 1;
 function getUsers() {
     userFetch.getAllUsers()
         .then(res => res.json())
-        .then(users => {users.forEach((user) => {count ++;
+        .then(users => {users.forEach((user) => {
             let stringRoles = getRoles(user.roles);
             document.querySelector('#tableUsers').insertAdjacentHTML('beforeend',
                 `<tr>
@@ -185,10 +184,8 @@ function getRoles(list) {
 function addRoles(role) {
     let roles = [];
     if (role === "ROLE_ADMIN"){
-        console.log("admin")
         roles.push({id: 1, role: "ROLE_ADMIN"});
     }
     roles.push({id: 2, role: "ROLE_USER"});
-    console.log(roles);
     return roles;
 }
